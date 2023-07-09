@@ -1,0 +1,50 @@
+div.label {
+    width: 100wh;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: cadetblue;
+}
+
+h2.text {
+    text-align: left;
+    font-size: 30px;
+}
+
+/* .statistic-price {
+    width: 100%;
+    height: 100px;
+    display: flex;
+} */
+div.infor-pane {
+    background-color: #cce7e8;
+    display: flex;
+    flex-direction: column;
+}
+
+/* .price-board {
+    width: 40%;
+    height: inherit;
+} */
+/* 
+.price-chart {
+    width: 60%;
+    height: inherit;
+} */
+.summary-container {
+    display: flex;
+    orientation: landscape;
+    flex-direction: column;
+} 
+.statistic-pane {
+    display: flex;
+    orientation: landscape;
+    flex-direction: column;
+}
+
+h3.label {
+    text-align: center;
+    font-size: 24px;
+}

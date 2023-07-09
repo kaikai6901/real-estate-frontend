@@ -22,6 +22,7 @@ function NewsList() {
     }, [])
 
     const formatListNews = () => {
+        console.log(news)
         const formattedNews = news.map((item) => ({
             ...item,
             price_per_m2: formatPrice(item.price_per_m2),

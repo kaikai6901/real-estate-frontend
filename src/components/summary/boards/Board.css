@@ -1,11 +1,9 @@
-.price-board {
-    height: 100px;
-    width: 100px;
+h2.avg-price-label {
+    text-align: center;
+    font-size: 24px;
 }
 
-.current-price {
-    font-size: 20px;
-    font-weight: 300;
-    color: black;
-    
+p.avg-price {
+    text-align: center;
+    font-size: 22px;
 }

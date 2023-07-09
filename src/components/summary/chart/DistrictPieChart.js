@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import 'chart.js/auto';
-import { ArcElement } from "chart.js";
 import { Pie } from 'react-chartjs-2';
 import './NewChart.css'
 function DistrictPieChart() {
@@ -65,21 +64,24 @@ function DistrictPieChart() {
                         '#888888',
                         '#79ccb3',
                         '#d6d727'
-                    ]
+                    ],
+                    weight: 1
                 }
             ]
         };
     };
 
     const options = {
+        // responsive: true,
         legend: {
             display: true,
-            position: 'bottom',
         },
+        cutoutPercentage: '50%%'
     };
 
     return (
-        <div className='pie-district-chart'>
+        <div className='pie-district-chart new-chart'>
+            <h3 className='pie-district-label label'>Số lượng bài viết</h3>
         {data ? (
             <Pie data={processChartData()} options={options} />
         ) : (

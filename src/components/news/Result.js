@@ -55,8 +55,9 @@ function Result(lngLat) {
     return (
         <div className="news-container">
           <div className="scroll-pane">
+            {console.log(news)}
             {news.map((article) => (
-              <div className="news-item" key={article._id}>
+              <div className="news-item" draggable={true} key={article._id}>
                 <h3>{article.title}</h3>
                 <h2>{formatPrice(article.price_per_m2)}</h2>
                 <p>{article.news_url}</p>

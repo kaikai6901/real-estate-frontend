@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-
+import './Board.css'
+const formatPrice = (price) => {
+    const roundedPrice = Math.round(price / 1000000); // Round to nearest million
+    return `${roundedPrice} triệu/m2`;
+  }
 function PriceBoard(){
     const [price, setPrice] = useState({});
 
@@ -27,8 +31,8 @@ function PriceBoard(){
 
     return (
         <div className='current-price'>
-            <h2>Gía Trung Bình</h2>
-            <p>{price.current}</p>
+            <h2 className='avg-price-label'>Giá trung bình (1 tháng) </h2>
+            <p className='avg-price'>{formatPrice(price.current)}</p>
         </div>
     )
 };

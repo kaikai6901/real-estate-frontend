@@ -14,3 +14,23 @@
     background-color: #f7f7f7;
     border: 1px solid #e1e1e1;
   }
+
+div.top-pane {
+  height: 50px;
+}
+
+div.bottom-pane {
+  height: 100px;
+}
+
+select {
+  width: 20%;
+  font-size: 22px;
+  border-radius: 5;
+}
+
+button {
+  width: 20%;
+  font-size: 22px;
+  border-radius: 5;
+}

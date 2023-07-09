@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-
+import 'chart.js/auto';
 function DistrictBarChart() {
 
     const [chartData, setChartData] = useState(null)
@@ -39,7 +39,7 @@ function DistrictBarChart() {
             labels: districtNames,
             datasets: [
                 {
-                    label: 'Average Price per m2',
+                    label: 'Giá trung bình / m2',
                     data: averagePrices,
                     backgroundColor: 'rgba(75,192,192,0.6)',
                 },
@@ -58,7 +58,8 @@ function DistrictBarChart() {
     };
 
     return (
-        <div className='bar-district-chart'>
+        <div className='bar-district-chart new-chart'>
+             <h3 className='bar-district-label label'>Giá trung bình</h3>
             {
                 chartData ? (
                     <Bar data={processChartData()} options={options} />

@@ -38,26 +38,29 @@
 }
 
 .header {
-  height: 60px;
+  height: 50px;
   width: 100vw;
-  background-color: black;
+  background-color: #44bcd8;
 }
 
 .nav-pane{
   height: inherit;
   width: inherit;
+  background-color: #69bdd2;
 }
 
 .redirect_button{
   height: inherit;
-  width: 20vw;
-  background-color: black;
+  width: 15vw;
+  background-color: #69bdd2;
   color: white;
   font-weight: 600;
   font-size: 20px;
+  border: none
+
 
 }
 
 .redirect_button:hover {
-  background-color: grey;
+  background-color: #cce7e8;
 }
