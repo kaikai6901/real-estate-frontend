@@ -1,0 +1,11 @@
+.price-board {
+    height: 100px;
+    width: 100px;
+}
+
+.current-price {
+    font-size: 20px;
+    font-weight: 300;
+    color: black;
+    
+}

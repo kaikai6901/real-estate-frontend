@@ -36,3 +36,28 @@
     transform: rotate(360deg);
   }
 }
+
+.header {
+  height: 60px;
+  width: 100vw;
+  background-color: black;
+}
+
+.nav-pane{
+  height: inherit;
+  width: inherit;
+}
+
+.redirect_button{
+  height: inherit;
+  width: 20vw;
+  background-color: black;
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+
+}
+
+.redirect_button:hover {
+  background-color: grey;
+}

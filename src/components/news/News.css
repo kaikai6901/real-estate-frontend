@@ -1,0 +1,16 @@
+.news-container {
+    height: 100vh; /* Set the desired height of the scroll pane */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+  }
+  
+  .scroll-pane {
+    padding: 10px;
+  }
+  
+  .news-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    border: 1px solid #e1e1e1;
+  }
