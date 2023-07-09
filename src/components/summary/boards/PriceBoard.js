@@ -18,7 +18,7 @@ function PriceBoard(){
     // }, [price]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5555/summary/price_of_month')
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/summary/price_of_month`)
         .then(res => res.json())
         .then(price => {
             setPrice(price)

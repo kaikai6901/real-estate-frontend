@@ -14,7 +14,7 @@ function ProjectList() {
     const [projects, setProjects] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5555/summary/get_list_project')
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/summary/get_list_project`)
         .then(res => res.json())
         .then(projects => {
             setProjects(projects)

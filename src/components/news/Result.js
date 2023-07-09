@@ -37,7 +37,7 @@ function Result(lngLat) {
         const fetchNews = async () => {
             try {
                 const params = new URLSearchParams({longitude, latitude})
-                const response = await fetch('http://127.0.0.1:5555/news/get_news?' + params );
+                const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/news/get_news?` + params );
                 const data = await response.json()
                 console.log(data)
                 setNews(data);

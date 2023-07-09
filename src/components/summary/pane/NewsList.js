@@ -14,7 +14,7 @@ function NewsList() {
     const [news, setNews] = useState([]);
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5555/summary/get_list_news')
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/summary/get_list_news`)
         .then(res => res.json())
         .then(news => {
             setNews(news)

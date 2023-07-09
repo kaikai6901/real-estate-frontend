@@ -7,7 +7,7 @@ function DistrictPieChart() {
     const [data, setData] = useState(null)
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5555/summary/get_news_district')
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/summary/get_news_district`)
         .then(res => res.json())
         .then(district => {
             console.log(district)

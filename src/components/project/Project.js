@@ -15,7 +15,7 @@ function Project() {
 
     const fetchProjects = async () => {
         try {
-          const response = await fetch('http://127.0.0.1:5555/project/get_projects');
+          const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/project/get_projects`);
           const data = await response.json();
           setProjects(data);
         } catch (error) {
@@ -69,7 +69,7 @@ function Project() {
             type="text"
             value={inputContent}
             onChange={e => setInputContent(e.target.value)}
-            placeholder="Enter a number"
+            placeholder="Nhập vào diện tích"
           />
           <button onClick={handleSearch}>Search</button>
           <div>{tagContent}</div>

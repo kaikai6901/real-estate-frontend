@@ -6,7 +6,7 @@ function DistrictBarChart() {
     const [chartData, setChartData] = useState(null)
 
     useEffect(() => {
-        fetch('http://127.0.0.1:5555/summary/price_by_district')
+        fetch(`${process.env.REACT_APP_API_ENDPOINT}/summary/price_by_district`)
         .then(res => res.json())
         .then(district => {
             setChartData(district)
