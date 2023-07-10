@@ -76,7 +76,6 @@ function DistrictPieChart() {
         legend: {
             display: true,
         },
-        cutoutPercentage: '50%%'
     };
 
     return (

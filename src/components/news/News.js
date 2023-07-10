@@ -29,7 +29,7 @@ const squareRange = {
 
 const objectiveList = {
     'Sắp xếp theo giá từ cao đến thấp': {total_price: -1},
-    'Sắp xếp theo giá từ thấp đến cap': {total_price: 1},
+    'Sắp xếp theo giá từ thấp đến cao': {total_price: 1},
     'Sắp xếp theo khoảng cách từ gần đến xa': {distance: 1},
     'Sắp xếp theo khoảng cách từ xa đến gần': {distance: -1},
     'Sắp xếp theo diện tích từ bé đến lớn': {square: 1},
@@ -87,7 +87,7 @@ function News() {
                             )
                         }
                     </select>
-                    <select value={square} onChange={e => setRadius(e.target.value)} >
+                    <select value={square} onChange={e => setSquare(e.target.value)} >
                         <option value=''>
                             Diện tích
                         </option>
@@ -99,7 +99,7 @@ function News() {
                             )
                         }
                     </select>
-                    <button>Tìm kiếm</button>
+                    {/* <button>Tìm kiếm</button> */}
                 </div>
                 <div className='infor-pane' style={{flex: '25%'}}>
                 <select value={ojective} style={{height: '100%', width: '100%'}} onChange={e => setOjective(e.target.value)} >
@@ -126,18 +126,16 @@ function News() {
 
                 <div style={{ flex: '25%' }}>
                     {lngLat && <Result lngLat={lngLat} 
-                    width="25vw" 
-                    height="100vh" 
+                    // width="25vw" 
+                    // height="100vh" 
                     />}
                     
                 </div>
             </div>
 
             <div className='bottom-pane'>
-                <div style={{ display: 'flex', flexDirection: 'row'}}>
-                    {lngLat && <Result lngLat={lngLat} 
-                    width="25vw" 
-                    height="100vh" 
+                <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap'}}>
+                    {lngLat && <Result lngLat={lngLat}
                     />}
                     
                 </div>

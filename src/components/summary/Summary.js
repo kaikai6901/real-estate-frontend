@@ -17,7 +17,7 @@ function Summary() {
                     <h2 className='text'>Thống kê chung</h2>
                 </div>
 
-                <div className='price-pane'>
+                <div className='price-pane infor-pane'>
                     <div className='price-board price'>
                         <PriceBoard />
                     </div>
@@ -25,18 +25,21 @@ function Summary() {
                         <PriceHistChart />
                     </div>
                 </div>
-          
-    
+
                 <div className='summary-district-label label'>
                     <h2 className='text'>Thống kê theo từng quận</h2>
                 </div>
-
+          
+                <div className='district-pane infor-pane'>
                     <div className='pie-chart'>
                         <DistrictPieChart />
                     </div>
                     <div className='bar-chart'>
                         <DistrictBarChart />
                     </div>
+
+                </div>
+
             </div>
 
             <div className='list-project-pane '>
