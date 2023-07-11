@@ -1,4 +1,4 @@
-.news-container {
+.result-container {
     height: 100vh; /* Set the desired height of the scroll pane */
     overflow-y: auto;
     border: 1px solid #ccc;

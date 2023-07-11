@@ -1,0 +1,39 @@
+
+div.item {
+    display: flex;
+    width: inherit;
+    height: inherit;
+}
+span.total-price {
+    float: left;
+    margin-right: 50%;
+}
+
+span.square {
+    float: right;
+}
+.meta.item {
+    display: flex;
+}
+span.price-per-m2 {
+    float: left;
+}
+
+div.item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #cce7e8;
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    color: black;
+}
+
+/* a.tittle {
+    display: flex;
+} */
+
+button.item {
+    height: 20%;
+    border-radius: 10px;
+    background-color: #69bdd2;
+}

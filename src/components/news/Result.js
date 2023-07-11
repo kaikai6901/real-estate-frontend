@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './News.css'
-
+import Item from './Item';
 
 
 const formatPrice = (price) => {
     const roundedPrice = Math.round(price / 1000000); // Round to nearest million
-    return `${roundedPrice} million/m2`;
+    return `${roundedPrice} triệu/m2`;
   };
   
   const formatSquare = (square) => {
@@ -56,13 +56,14 @@ function Result(lngLat) {
         <div className="news-container">
           <div className="scroll-pane">
             {console.log(news)}
-            {news.map((article) => (
-              <div className="news-item" draggable={true} key={article._id}>
-                <h3>{article.title}</h3>
-                <h2>{formatPrice(article.price_per_m2)}</h2>
-                <p>{article.news_url}</p>
-                {/* Display other properties as needed */}
-              </div>
+            {news.map(article => (
+              // <div className="news-item" draggable={true} key={article._id}>
+              //   <h3>{article.title}</h3>
+              //   <h2>{formatPrice(article.price_per_m2)}</h2>
+              //   <p>{article.news_url}</p>
+              //   {/* Display other properties as needed */}
+              // </div>
+              <Item item={article} />
             ))}
           </div>
         </div>

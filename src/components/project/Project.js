@@ -1,6 +1,8 @@
-
-
 import React, { useState, useEffect } from 'react';
+import ReactMapGL  from '@goongmaps/goong-map-react';
+import './Project.css';
+import Item from '../news/Item';
+const GOONG_MAPTILES_KEY = '0GjPXb6QcBApKDRqit0zOBwor2cFe12T07fJ2Asg';
 
 function Project() {
     console.log('project')
@@ -8,6 +10,13 @@ function Project() {
     const [selectedProject, setSelectedProject] = useState('');
     const [inputContent, setInputContent] = useState('');
     const [tagContent, setTagContent] = useState('');
+    const [news, setNews] = useState([])
+
+    const [viewport, setViewport] = React.useState({
+      longitude: 105.8549172,
+      latitude: 21.0234631,
+      zoom: 10
+    });
 
     useEffect(() => {
         fetchProjects();
@@ -56,24 +65,80 @@ function Project() {
         }
     };
 
+    const handleChangeProject = (event) => {
+      const selectedIndex = event.target.selectedIndex;
+      const selectedValue = event.target.options[selectedIndex].value;
+
+      console.log(selectedIndex, selectedValue)
+      console.log(projects[selectedIndex - 1])
+    }
     return (
-        <div>
-            {console.log('project')}
-          <select value={selectedProject} onChange={e => setSelectedProject(e.target.value)}>
-            <option value="">Select a project</option>
-            {projects.map(project => (
-              <option key={project.project_id} value={project.project_id}>{project.name}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            value={inputContent}
-            onChange={e => setInputContent(e.target.value)}
-            placeholder="Nhập vào diện tích"
-          />
-          <button onClick={handleSearch}>Search</button>
-          <div>{tagContent}</div>
+      <div style={{display: 'flex'}}>
+        <div style={{ flex: '75%'}}>
+                    <ReactMapGL {...viewport} 
+                    width="75vw" 
+                    height="100vh" 
+                    onViewportChange={setViewport} 
+                    goongApiAccessToken={GOONG_MAPTILES_KEY}
+                    // onClick={handleMapClick}
+                    />
         </div>
+
+        <div className='evaluate-pane'>
+          <div className='select-pane' >
+            <h3 className='project'>
+              Chọn dự án
+            </h3>
+            <select className='project' value={selectedProject} onChange={handleChangeProject}>
+                  <option value="">Select a project</option>
+                  {projects.map(project => (
+                    <option key={project.project_id} value={project.project_id}>{project.name}</option>
+                  ))}
+            </select>
+          </div>
+
+          <div className='input-pane'>
+            <h3 className='project'>
+             Nhập diện tích
+            </h3>
+            <input 
+              className='project'
+              type="text"
+              value={inputContent}
+              onChange={e => setInputContent(e.target.value)}
+              placeholder="Nhập vào diện tích"
+            />
+          </div>
+          <div className='search-pane'>
+            <button  className='project' onClick={handleSearch}>Search</button>
+          </div>
+
+            <h3 className='project'>
+             Kết quả trả về
+            </h3>
+          <div className='predict-result'>{tagContent} / m2</div>
+
+          <div className='list-news-container'>
+                    <div className='scroll-pane'>
+                        {news && 
+                            news.map(item => 
+                                (
+                                    <div className='item-wrapper' >
+                                        <Item item={item}/>
+                                    </div>
+                                )
+                                
+                                )
+                        }
+                    </div>
+                    {/* {lngLat && <Result lngLat={lngLat} 
+                    // width="25vw" 
+                    // height="100vh" 
+                    />}
+                     */}
+                </div>
+        </div>
+      </div>
     );
 }
 

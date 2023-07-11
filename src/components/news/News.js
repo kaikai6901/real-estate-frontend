@@ -2,6 +2,7 @@
 import Result from './Result';
 import React, { useState } from 'react';
 import ReactMapGL  from '@goongmaps/goong-map-react';
+import Item from './Item';
 import './News.css'
 const GOONG_MAPTILES_KEY = '0GjPXb6QcBApKDRqit0zOBwor2cFe12T07fJ2Asg';
 
@@ -28,22 +29,32 @@ const squareRange = {
 }
 
 const objectiveList = {
-    'Sắp xếp theo giá từ cao đến thấp': {total_price: -1},
-    'Sắp xếp theo giá từ thấp đến cao': {total_price: 1},
-    'Sắp xếp theo khoảng cách từ gần đến xa': {distance: 1},
-    'Sắp xếp theo khoảng cách từ xa đến gần': {distance: -1},
-    'Sắp xếp theo diện tích từ bé đến lớn': {square: 1},
-    'Sắp xếp theo diện tích từ lớn đến bé': {square: -1},
+    'Sắp xếp theo giá từ cao đến thấp': ['total_price', -1],
+    'Sắp xếp theo giá từ thấp đến cao': ['total_price',  1],
+    'Sắp xếp theo khoảng cách từ gần đến xa': ['distance', 1],
+    'Sắp xếp theo khoảng cách từ xa đến gần': ['distance', -1],
+    'Sắp xếp theo diện tích từ bé đến lớn': ['square', 1],
+    'Sắp xếp theo diện tích từ lớn đến bé': ['square', -1]
 }
 function News() {
-    var selectedRadius = 3;
-    var selectedPrice = [];
-    var selectedSquare = [];
 
     const [radius, setRadius] = useState('')
     const [price, setPrice] = useState([])
     const [square, setSquare] = useState([])
     const [ojective, setOjective] = useState({})
+    const [news, setNews] = useState([])
+    const [savedNews, setSavedNews] = useState([])
+
+
+    const handleSave = (item) => {
+        setNews((prevList) => prevList.filter((i) => i !== item));
+        setSavedNews((prevList) => [...prevList, item]);
+    }
+
+    const handleUnSave = (item) => {
+        setSavedNews((prevList) => prevList.filter((i) => i !== item));
+        setNews((prevList) => [...prevList, item]);
+    }
 
     const [viewport, setViewport] = React.useState({
         longitude: 105.8549172,
@@ -51,12 +62,24 @@ function News() {
         zoom: 10
       });
 
-    const [lngLat, setLngLat] = React.useState([105.8549172, 21.0234631])
+    // const [lngLat, setLngLat] = React.useState([105.8549172, 21.0234631])
+
+    const fetchNews = async (longitude, latitude) => {
+        try {
+            const params = new URLSearchParams({longitude, latitude})
+            const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/news/get_news?` + params );
+            const data = await response.json()
+            console.log(data)
+            setNews(data);
+        } catch (error) {
+            console.error('Error : ', error);
+        }
+    };
 
     const handleMapClick = (event) => {
-        const { lngLat } = event;
+        const {lngLat} = event;
         console.log('Clicked at:', lngLat);
-        setLngLat(lngLat)
+        fetchNews(lngLat[0], lngLat[1])
     };
 
     return (
@@ -103,6 +126,9 @@ function News() {
                 </div>
                 <div className='infor-pane' style={{flex: '25%'}}>
                 <select value={ojective} style={{height: '100%', width: '100%'}} onChange={e => setOjective(e.target.value)} >
+                        <option value=''>
+                            
+                        </option>
                         {
                             Object.entries(objectiveList).map(
                                 ([key, value]) => (
@@ -124,20 +150,42 @@ function News() {
                     />
                 </div>
 
-                <div style={{ flex: '25%' }}>
-                    {lngLat && <Result lngLat={lngLat} 
+                <div className='result-container' style={{ flex: '25%' }}>
+                    <div className='scroll-pane'>
+                        {news && 
+                            news.map(item => 
+                                (
+                                    <div className='item-wrapper' >
+                                        <Item item={item} is_draggable='true' is_save='true' label_button='Lưu' onSave={handleSave}/>
+                                    </div>
+                                )
+                                
+                                )
+                        }
+                    </div>
+                    {/* {lngLat && <Result lngLat={lngLat} 
                     // width="25vw" 
                     // height="100vh" 
                     />}
-                    
+                     */}
                 </div>
             </div>
 
             <div className='bottom-pane'>
-                <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap'}}>
-                    {lngLat && <Result lngLat={lngLat}
-                    />}
-                    
+                <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap', height: '200px'}}>
+                    {/* {lngLat && <Result lngLat={lngLat} */}
+                    {/* />} */}
+                    {savedNews && 
+                            savedNews.map(item => 
+                                (
+                                    <div className='item-wrapper' >
+                                        <Item item={item} is_draggable='true' is_save='true' label_button='Hủy lưu' onSave={handleUnSave} />
+                                    </div>
+                                )
+                                
+                                )
+                        }
+
                 </div>
             </div>
        
