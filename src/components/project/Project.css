@@ -23,3 +23,9 @@ h3.project {
     background-color: #cce7e8;
     font-size: 20;
 }
+
+div.list-news-container {
+    height: 50vh; /* Set the desired height of the scroll pane */
+    overflow-y: auto;
+    border: 1px solid #ccc;
+}

@@ -15,7 +15,7 @@ function Project() {
     const [viewport, setViewport] = React.useState({
       longitude: 105.8549172,
       latitude: 21.0234631,
-      zoom: 10
+      zoom: 12
     });
 
     useEffect(() => {
@@ -32,6 +32,16 @@ function Project() {
         }
     };
 
+    const fetchNews = async (project_id) => {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/project/${project_id}/get_news`);
+        const data = await response.json();
+        setNews(data);
+
+      } catch (error) {
+        console.error('Error fetching projects:', error)
+      }
+    }
     const handleSearch = async () => {
         // Validate data before sending the request
         if (selectedProject === '' || isNaN(inputContent)) {
@@ -69,8 +79,16 @@ function Project() {
       const selectedIndex = event.target.selectedIndex;
       const selectedValue = event.target.options[selectedIndex].value;
 
-      console.log(selectedIndex, selectedValue)
-      console.log(projects[selectedIndex - 1])
+      setSelectedProject(event.target.options[selectedIndex].value)
+      console.log(event.target.options[selectedIndex])
+      // console.log(event.target.options[selectedIndex].getAttribute('longitude'))
+      // console.log(event.target.options[selectedIndex].getAttribute('latitude'))
+      setViewport({
+        longitude: parseFloat(event.target.options[selectedIndex].getAttribute('longitude')),
+        latitude: parseFloat(event.target.options[selectedIndex].getAttribute('latitude')),
+        zoom: 16
+      })
+      fetchNews(selectedValue)
     }
     return (
       <div style={{display: 'flex'}}>
@@ -84,15 +102,16 @@ function Project() {
                     />
         </div>
 
-        <div className='evaluate-pane'>
+        <div className='evaluate-pane' style={{flex: '25%'}}>
           <div className='select-pane' >
             <h3 className='project'>
               Chọn dự án
             </h3>
             <select className='project' value={selectedProject} onChange={handleChangeProject}>
-                  <option value="">Select a project</option>
+                  <option value="" key="">Select a project</option>
                   {projects.map(project => (
-                    <option key={project.project_id} value={project.project_id}>{project.name}</option>
+                   
+                    <option key={project.project_id} value={project.project_id} longitude={project.loc.coordinates[0]} latitude={project.loc.coordinates[1]}>{project.name}</option>
                   ))}
             </select>
           </div>
@@ -131,12 +150,7 @@ function Project() {
                                 )
                         }
                     </div>
-                    {/* {lngLat && <Result lngLat={lngLat} 
-                    // width="25vw" 
-                    // height="100vh" 
-                    />}
-                     */}
-                </div>
+          </div>
         </div>
       </div>
     );

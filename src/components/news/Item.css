@@ -12,7 +12,7 @@ span.total-price {
 span.square {
     float: right;
 }
-.meta.item {
+.meta {
     display: flex;
 }
 span.price-per-m2 {
