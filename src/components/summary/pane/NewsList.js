@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Pane.css'
 import Item from '../../news/Item';
 const formatPrice = (price) => {
-    const roundedPrice = Math.round(price / 1000000); // Round to nearest million
-    return `${roundedPrice} million`;
+    const roundedPrice = Math.round(price / 10000) / 100; // Round to nearest million
+    return `${roundedPrice} triệu`;
   };
   
   const formatSquare = (square) => {

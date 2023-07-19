@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './Board.css'
 const formatPrice = (price) => {
-    const roundedPrice = Math.round(price / 1000000); // Round to nearest million
+    const roundedPrice = Math.round(price / 10000) / 100; // Round to nearest million
     return `${roundedPrice} triệu/m2`;
   }
 function PriceBoard(){
