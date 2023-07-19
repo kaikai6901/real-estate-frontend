@@ -35,14 +35,25 @@ const PriceHistChart = () => {
         },
         ],
     };
+
+    const barChartOption = {
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: 'Đơn giá theo m2 (triệu / m2)'
+                }
+            }
+        }
+    }
     console.log(data)
 
     return (
         <div className='bar-price-chart new-chart'>
              <h3 className='hist-price-label label'>Phân bố giá </h3>
         {
-            data ? (
-                <Bar data={data} height={100} />
+            bins ? (
+                <Bar data={data} height={100} options={barChartOption}/>
             ) : (
             <p>Loading chart...</p>
         )}

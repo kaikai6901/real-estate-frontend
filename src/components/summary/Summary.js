@@ -5,24 +5,32 @@ import DistrictBarChart from './chart/DistrictBarChart';
 import ProjectList from './pane/ProjectList';
 import NewsList from './pane/NewsList'
 import PriceHistChart from './chart/PriceHistChart';
-
+import DistrictModal from '../modals/DistrictModal';
+import ProjectModal from '../modals/ProjectModal';
 import './Summary.css'
+import { useState } from 'react';
 function Summary() {
-
+    const [openDistrictModal, setOpenDistrictModal] = useState(null)
+    const [openProjectModal, setOpenProjectModal] = useState(null)
+    
     return (
+        
         <div className='summary-container'>
-
+            {openDistrictModal && <DistrictModal district={openDistrictModal} handleClose={setOpenDistrictModal} />}
+            {openProjectModal && <ProjectModal project_id={openProjectModal} handleClose={setOpenProjectModal} />}
             <div className='statistic-pane'>
                 <div className='statistic-label label'>
                     <h2 className='text'>Thống kê chung</h2>
                 </div>
 
                 <div className='price-pane infor-pane'>
-                    <div className='price-board price'>
-                        <PriceBoard />
-                    </div>
-                    <div className='price-chart price'>
-                        <PriceHistChart />
+                    <div className='chart-area'>
+                        <div className='price-board price first-chart'>
+                            <PriceBoard />
+                        </div>
+                        <div className='price-chart price second-chart'>
+                            <PriceHistChart />
+                        </div>
                     </div>
                 </div>
 
@@ -31,24 +39,24 @@ function Summary() {
                 </div>
           
                 <div className='district-pane infor-pane'>
-                    <div className='pie-chart'>
-                        <DistrictPieChart />
+                    <div className='chart-area'>
+                        <div className='pie-chart first-chart'>
+                            <DistrictPieChart modalHandle={setOpenDistrictModal} />
+                        </div>
+                        <div className='bar-chart second-chart'>
+                            <DistrictBarChart modalHandle={setOpenDistrictModal}/>
+                        </div>
                     </div>
-                    <div className='bar-chart'>
-                        <DistrictBarChart />
-                    </div>
-
                 </div>
 
             </div>
-
             <div className='list-project-pane '>
                 <div className='list-project-label label'>
                     <h2 className='text'>
                         Những dự án có nhiều bài đăng
                     </h2>
                 </div>
-                <ProjectList />
+                <ProjectList modalHandle={setOpenProjectModal}/>
             </div>
 
             <div className='list-news-pane'>

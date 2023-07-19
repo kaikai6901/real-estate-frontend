@@ -48,3 +48,17 @@ h3.label {
     text-align: center;
     font-size: 24px;
 }
+
+div.chart-area {
+    display: flex;
+    align-items: center;
+    vertical-align: middle;
+}
+
+div.first-chart{
+    flex: 35%;
+}
+
+div.second-chart {
+    flex: 65%;
+}

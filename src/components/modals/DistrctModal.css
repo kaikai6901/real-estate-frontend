@@ -1,0 +1,39 @@
+/* .modalBackground {
+    width: 100vw;
+    height: 100vh;
+    background-color:rgba(0,0,0,0.5);;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalContainer {
+    width: 750px;
+    height: 700px;
+    border-radius: 12px;
+    background-color: white;
+    box-shadow: rgba(0,0,0,0.35) 0px 5px 15px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+} */
+
+.modal-summary {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.modal-total-price {
+    flex: 50%
+}
+
+.modal-price-per-m2 {
+    flex: 50%
+}
+
+.modal.title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}

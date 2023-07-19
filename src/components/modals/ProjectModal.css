@@ -1,0 +1,20 @@
+div.project-header {
+    margin-bottom: 10px;
+}
+
+button.project_button{
+    width: 50vw;
+}
+
+div.project-summary-container {
+    orientation: landscape;
+    flex-direction: column;
+}
+
+div.modal-summary {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+div.main-content {
+    overflow-y: auto;
+}

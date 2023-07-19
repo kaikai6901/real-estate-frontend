@@ -6,13 +6,38 @@ const formatPrice = (price) => {
         const roundedPrice = Math.round(price / 1e6, 2);
         return `${roundedPrice} triệu`
     } else {
-        const roundedPrice = Math.round(price / 1e7) / 100;
+        const roundedPrice = Math.round(price / 1e9, 2);
         return `${roundedPrice} tỷ`
     }
 }
 
-const getPlacce = (news) => {
+const formatAddress = (news) => {
+    const fields = [];
+    if (news.street) {
+        if (news.full_street_name)
+            fields.push(news.street);
+    }
+
+      
+    if (news.commune) {
+        fields.push(news.commune);
+    }
+
+    if (news.district) {
+        fields.push(news.district);
+    }
     
+    if (news.province) {
+        fields.push(news.province);
+    }
+    return fields.join(', ');
+      
+}
+
+const getProject = (news) => {
+    if(news.base_project)
+        return news.base_project.name
+    return '---'
 }
 function Item(props) {
     const hanleButtonClick = () => {
@@ -24,8 +49,8 @@ function Item(props) {
         <div className='item clearfix' data-item-id={news.news_id} {...props}>
             {console.log({...props})}
 
-            <div title={news.title}>
-                <div className='item meta meta-infor'>
+            <div className='second-wrapper' title={news.title}>
+                <div className='meta meta-infor'>
                 <a href={news.news_url} className='item title'>
                     {news.title}
                 </a>
@@ -35,7 +60,7 @@ function Item(props) {
                     </button>
                 )}
                 </div>
-                <div className='item meta meta-infor'>
+                <div className='meta meta-infor'>
                     <span className='total-price'>
                         {formatPrice(news.total_price)}
                     </span>
@@ -46,10 +71,20 @@ function Item(props) {
                     </span>
                 </div>
 
-                <div className='item meta meta-info'>
+                <div className='meta meta-infor'>
                     <span className='price-per-m2'>
                         {formatPrice(news.price_per_m2)}
                         <i> /m2</i>
+                    </span>
+                </div>
+                <div className='meta meta-infor'>
+                    <span className='project'>
+                        {getProject(news)}
+                    </span>
+                </div>
+                <div className='meta meta-infor'>
+                    <span className='address'>
+                        {formatAddress(news)}
                     </span>
                 </div>
 

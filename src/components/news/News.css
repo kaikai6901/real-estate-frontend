@@ -1,5 +1,5 @@
 .result-container {
-    height: 100vh; /* Set the desired height of the scroll pane */
+    height: 70vh; /* Set the desired height of the scroll pane */
     overflow-y: auto;
     border: 1px solid #ccc;
   }
@@ -24,13 +24,13 @@ div.bottom-pane {
 }
 
 select {
-  width: 20%;
+  width: 15%;
   font-size: 22px;
   border-radius: 5;
 }
 
 button {
-  width: 20%;
+  width: 15%;
   font-size: 22px;
   border-radius: 5;
 }

@@ -1,20 +1,43 @@
-import React, { useEffect, useState } from 'react';
-import { Bar } from 'react-chartjs-2';
+import React, { useEffect, useState, useRef } from 'react';
+import {
+    Chart as ChartJS,
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    Legend
+} from 'chart.js'
 import 'chart.js/auto';
-function DistrictBarChart() {
+import { Bar, getElementsAtEvent } from 'react-chartjs-2';
+ChartJS.register(
+    BarElement,
+    CategoryScale,
+    LinearScale,
+    Tooltip,
+    Legend
+)
+function DistrictBarChart(props) {
 
     const [chartData, setChartData] = useState(null)
 
+    const chartRef = useRef();
+    const handleClick = (event) => {
+        if(getElementsAtEvent(chartRef.current, event).length > 0) {
+            const datasetIndexNum = getElementsAtEvent(chartRef.current, event)[0].datasetIndex
+            const dataPoint = getElementsAtEvent(chartRef.current, event)[0].index
+            console.log(chartData.labels[dataPoint])
+            props.modalHandle(chartData.labels[dataPoint])
+        }
+    }
     useEffect(() => {
         fetch(`${process.env.REACT_APP_API_ENDPOINT}/summary/price_by_district`)
         .then(res => res.json())
-        .then(district => {
-            setChartData(district)
-        })
+        .then(districts => processChartData(districts))
+        .then(data => setChartData(data))
     }, [])
 
-    const processChartData = () => {
-        if (!chartData) {
+    const processChartData = (districts) => {
+        if (!districts) {
             return {
                 labels: [],
                 datasets: [
@@ -26,12 +49,13 @@ function DistrictBarChart() {
             };
         }
 
-        const sortedData = chartData.sort((a, b) => b.average_price_per_m2 - a.average_price_per_m2);
+        const sortedData = districts.sort((a, b) => b.average_price_per_m2 - a.average_price_per_m2);
         
         const top10Districts = sortedData.slice(0, 10);
 
-        const districtNames = top10Districts.map((district) => district._id);
-        const averagePrices = top10Districts.map(
+        const topFilteredDistricts = top10Districts.filter(item => item.count > 50)
+        const districtNames = topFilteredDistricts.map((district) => district._id);
+        const averagePrices = topFilteredDistricts.map(
           (district) => district.average_price_per_m2
         );
         
@@ -62,7 +86,7 @@ function DistrictBarChart() {
              <h3 className='bar-district-label label'>Giá trung bình</h3>
             {
                 chartData ? (
-                    <Bar data={processChartData()} options={options} />
+                    <Bar data={chartData} options={options} ref={chartRef} onClick={handleClick}/>
                 ) : (
                 <p>Loading chart...</p>
             )}

@@ -1,9 +1,12 @@
 
 import Result from './Result';
 import React, { useState } from 'react';
-import ReactMapGL  from '@goongmaps/goong-map-react';
+import ReactMapGL, {Marker}  from '@goongmaps/goong-map-react';
 import Item from './Item';
 import './News.css'
+import Project from '../summary/pane/Project';
+import ProjectModal from '../modals/ProjectModal';
+import StatisticModal from '../modals/StatisticModal';
 const GOONG_MAPTILES_KEY = '0GjPXb6QcBApKDRqit0zOBwor2cFe12T07fJ2Asg';
 
 const radiusRange = {
@@ -38,25 +41,43 @@ const objectiveList = {
     'Sắp xếp theo diện tích từ lớn đến bé': 'square,-1'
 }
 
+const typeList = {
+    'Bài viết': '1',
+    'Dự án': '2',
+}
+
 function News() {
 
     const [radius, setRadius] = useState('')
     const [price, setPrice] = useState('')
     const [square, setSquare] = useState('')
     const [objective, setObjective] = useState('')
-    const [news, setNews] = useState([])
-    const [savedNews, setSavedNews] = useState([])
+    const [type, setType] = useState('1')
 
+    const [news, setNews] = useState(null)
+    const [savedNews, setSavedNews] = useState(null)
 
+    const [openProjectModal, setOpenProjectModal] = useState(null)
+    const [openStatisticModal, setOpenStatisticModal] = useState(null)
+
+    const [statistc, setStatistic] = useState(null)
+
+    const [lngLat, setLngLat] = useState({
+        longitude: 105.8549172,
+        latitude: 21.0234631
+    })
     const handleSave = (item) => {
-        setNews((prevList) => prevList.filter((i) => i !== item));
-        setSavedNews((prevList) => [...prevList, item]);
+        if (news) setNews((prevList) => prevList.filter((i) => i !== item));
+        if (savedNews) setSavedNews((prevList) => [...prevList, item]);
+        else setSavedNews([item])
     }
 
     const handleUnSave = (item) => {
-        setSavedNews((prevList) => prevList.filter((i) => i !== item));
-        setNews((prevList) => [...prevList, item]);
+        if (savedNews) setSavedNews((prevList) => prevList.filter((i) => i !== item));
+        if (news) setNews((prevList) => [...prevList, item]);
+        else setNews([item])
     }
+
 
     const [viewport, setViewport] = React.useState({
         longitude: 105.8549172,
@@ -66,8 +87,11 @@ function News() {
 
     // const [lngLat, setLngLat] = React.useState([105.8549172, 21.0234631])
 
-    const fetchNews = async (longitude, latitude) => {
+    const fetchNews = async () => {
         try {
+            const longitude = lngLat.longitude
+            const latitude = lngLat.latitude
+            console.log(lngLat)
             const params = new URLSearchParams({longitude, latitude})
             
             if (radius !== '') {
@@ -97,11 +121,24 @@ function News() {
                 params.append(objective_key, order)
 
             }
+           
             console.log(params.toString())
-            const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/news/get_news?` + params );
-            const data = await response.json()
-            console.log(data)
-            setNews(data);
+            if (type === '1') {
+                const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/news/get_news?` + params );
+                const data = await response.json()
+                console.log(data)
+                setNews(data);
+            } else {
+                const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/news/get_projects?` + params );
+                const data = await response.json()
+                console.log(data)
+                setNews(data);
+            }
+            const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/news/get_statistic?` + params );
+            const statistc = await response.json()
+            console.log(statistc)
+            setStatistic(statistc)
+
         } catch (error) {
             console.error('Error : ', error);
         }
@@ -110,13 +147,38 @@ function News() {
     const handleMapClick = (event) => {
         const {lngLat} = event;
         console.log('Clicked at:', lngLat);
-        fetchNews(lngLat[0], lngLat[1])
+        setViewport({
+            longitude: lngLat[0],
+            latitude: lngLat[1],
+            zoom: 15
+        })
+        setLngLat(
+            {
+                longitude: lngLat[0],
+                latitude: lngLat[1],
+                zoom: 15
+            }
+        )
+        fetchNews();
     };
 
     return (
+        <div className='container'>
+        {openProjectModal && <ProjectModal project_id={openProjectModal} handleClose={setOpenProjectModal} />}
+        {openStatisticModal && statistc && <StatisticModal currentStatistic={statistc.currentStatistic} historyStatistic={statistc.historyStatistic} handleClose={setOpenStatisticModal}/>}
         <div style={{display: 'flex', flexDirection:'column'}}>
             <div style={{display: 'flex'}} className='top-pane'>
                 <div className='select-pane' style={{flex: '75%', display:'flex'}}>
+                    <select value={type} onChange={e => setType(e.target.value)} >
+                        {
+                            Object.entries(typeList).map(
+                                ([key, value]) => (
+                                    <option key={value} value={value}>{key}</option>
+                                )
+                            )
+                        }
+                    </select>
+
                     <select value={radius} onChange={e => setRadius(e.target.value)} >
                         <option value=''>
                             Bán kính
@@ -153,7 +215,7 @@ function News() {
                             )
                         }
                     </select>
-                    {/* <button>Tìm kiếm</button> */}
+                    <button onClick={(e) => setOpenStatisticModal(1)}>Thống kê</button>
                 </div>
                 <div className='infor-pane' style={{flex: '25%'}}>
                 <select value={objective} style={{height: '100%', width: '100%'}} onChange={e => setObjective(e.target.value)} >
@@ -170,24 +232,42 @@ function News() {
                     </select>
                 </div>
             </div>
-            <div style={{display: 'flex'}} className='mid-pane'>
-                <div style={{ flex: '75%'}}>
-                    <ReactMapGL {...viewport} 
-                    width="75vw" 
-                    height="100vh" 
-                    onViewportChange={setViewport} 
-                    goongApiAccessToken={GOONG_MAPTILES_KEY}
-                    onClick={handleMapClick}
-                    />
+            <div style={{display: 'flex', padding: '10px'}} className='mid-pane'>
+                <div className='map-area'style={{ flex: '75%'}} >
+                    {openProjectModal === null && openStatisticModal == null && <div style={{ flex: '75%'}}>
+                        <ReactMapGL {...viewport} 
+                            width="75vw" 
+                            height="75vh" 
+                            onViewportChange={setViewport} 
+                            goongApiAccessToken={GOONG_MAPTILES_KEY}
+                            onClick={handleMapClick}>
+                        <Marker latitude={lngLat.latitude} longitude={lngLat.longitude} width='15px' height='15px'>
+                            <div style={{fontSize: '22px'}}>
+                                Tìm kiếm xung quanh 
+                            </div>
+                        </Marker>
+                        </ReactMapGL>
+                        
+                    </div>}
                 </div>
 
                 <div className='result-container' style={{ flex: '25%' }}>
                     <div className='scroll-pane'>
-                        {news && 
+                        {type === '1' && news && news[0].news_id && 
                             news.map(item => 
                                 (
                                     <div className='item-wrapper' >
                                         <Item item={item} is_draggable='true' is_save='true' label_button='Lưu' onSave={handleSave}/>
+                                    </div>
+                                )
+                                
+                                )
+                        }
+                         {type === '2' && news && news[0].project_id && 
+                            news.map(item => 
+                                (
+                                    <div className='item-wrapper' >
+                                        <Project project={item} is_draggable='true' is_save='true' label_button='Lưu' onSave={handleSave} modalHandle={setOpenProjectModal}/>
                                     </div>
                                 )
                                 
@@ -203,14 +283,13 @@ function News() {
             </div>
 
             <div className='bottom-pane'>
-                <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap', height: '200px'}}>
-                    {/* {lngLat && <Result lngLat={lngLat} */}
-                    {/* />} */}
+                <div style={{ overflowX: 'scroll', whiteSpace: 'nowrap', height: '210px'}}>
                     {savedNews && 
                             savedNews.map(item => 
                                 (
-                                    <div className='item-wrapper' >
-                                        <Item item={item} is_draggable='true' is_save='true' label_button='Hủy lưu' onSave={handleUnSave} />
+                                    <div className='item-wrapper' style={{ display: 'inline-block', width: '400px', border: '1px solid gray', borderRadius: '5px'}} >
+                                        {item.news_id && <Item item={item} is_draggable='true' is_save='true' label_button='Hủy lưu' onSave={handleUnSave} />}
+                                        {item.project_id && <Project project={item} is_draggable='true' is_save='true' label_button='Hủy lưu' onSave={handleUnSave} modalHandle={setOpenProjectModal}/>}
                                     </div>
                                 )
                                 
@@ -221,6 +300,7 @@ function News() {
             </div>
        
 
+        </div>
         </div>
       );
 }
