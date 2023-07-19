@@ -218,7 +218,7 @@ function News() {
                     <button onClick={(e) => setOpenStatisticModal(1)}>Thống kê</button>
                 </div>
                 <div className='infor-pane' style={{flex: '25%'}}>
-                <select value={objective} style={{height: '100%', width: '100%'}} onChange={e => setObjective(e.target.value)} >
+                <select value={objective} style={{height: '100%', width: '100%'}} onChange={e => {setObjective(e.target.value); fetchNews()}} >
                         <option value=''>
                             Mặc định
                         </option>

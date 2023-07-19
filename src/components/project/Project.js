@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import ReactMapGL  from '@goongmaps/goong-map-react';
+import ReactMapGL, {Marker} from '@goongmaps/goong-map-react';
 import './Project.css';
 import Item from '../news/Item';
 const GOONG_MAPTILES_KEY = '0GjPXb6QcBApKDRqit0zOBwor2cFe12T07fJ2Asg';
-
+const formatPrice = (price) => {
+  if (price < 1e9) {
+      const roundedPrice = Math.round(price / 1e6, 2);
+      return `${roundedPrice} triệu`
+  } else {
+      const roundedPrice = Math.round(price / 1e9, 2);
+      return `${roundedPrice} tỷ`
+  }
+}
 function Project() {
     console.log('project')
     const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState('');
     const [inputContent, setInputContent] = useState('');
+    const [bedrooms, setBedrooms] = useState('');
     const [tagContent, setTagContent] = useState('');
     const [news, setNews] = useState([])
+    const [lngLat, setLngLat] = useState(null)
 
     const [viewport, setViewport] = React.useState({
       longitude: 105.8549172,
@@ -44,7 +54,7 @@ function Project() {
     }
     const handleSearch = async () => {
         // Validate data before sending the request
-        if (selectedProject === '' || isNaN(inputContent)) {
+        if (selectedProject === '' || isNaN(inputContent) || isNaN(bedrooms)) {
           console.log('Please select a project and enter a valid number.');
           return;
         }
@@ -52,7 +62,9 @@ function Project() {
         try {
             const projectId = parseInt(selectedProject);
             const square = parseInt(inputContent);
-            const response = await fetch('http://13.212.248.136:5001/predict', {
+            const n_bedrooms = parseInt(bedrooms)
+
+            const response = await fetch(`${process.env.REACT_APP_MODEL_API_ENDPOINT}/predict`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -62,14 +74,15 @@ function Project() {
             },
             body: JSON.stringify({
               project_id: projectId,
-              square: square
+              square: square,
+              n_bedrooms: n_bedrooms
             })
           });
           console.log(response)
           console.log(response.body)
           const data = await response.json();
           console.log(data)
-          setTagContent(data['predictions']);
+          setTagContent(formatPrice(data['predictions']));
         } catch (error) {
           console.error('Error searching:', error);
         }
@@ -88,18 +101,28 @@ function Project() {
         latitude: parseFloat(event.target.options[selectedIndex].getAttribute('latitude')),
         zoom: 16
       })
+      setLngLat({
+        longitude: parseFloat(event.target.options[selectedIndex].getAttribute('longitude')),
+        latitude: parseFloat(event.target.options[selectedIndex].getAttribute('latitude')),
+      })
       fetchNews(selectedValue)
     }
     return (
       <div style={{display: 'flex'}}>
         <div style={{ flex: '75%'}}>
-                    <ReactMapGL {...viewport} 
-                    width="75vw" 
+                    <ReactMapGL {...viewport}  width="75vw" 
                     height="100vh" 
                     onViewportChange={setViewport} 
-                    goongApiAccessToken={GOONG_MAPTILES_KEY}
-                    // onClick={handleMapClick}
-                    />
+                    goongApiAccessToken={GOONG_MAPTILES_KEY}>
+                    {lngLat && 
+                    <Marker latitude={lngLat.latitude} longitude={lngLat.longitude} width='15px' height='15px'>
+                        <div style={{fontSize: '22px'}}>
+                          Dự án ở đây
+                        </div>
+                    </Marker>}
+
+                    </ReactMapGL>
+                  
         </div>
 
         <div className='evaluate-pane' style={{flex: '25%'}}>
@@ -126,6 +149,18 @@ function Project() {
               value={inputContent}
               onChange={e => setInputContent(e.target.value)}
               placeholder="Nhập vào diện tích"
+            />
+          </div>
+          <div className='input-pane'>
+            <h3 className='project'>
+             Nhập số phòng ngủ
+            </h3>
+            <input 
+              className='project'
+              type="text"
+              value={bedrooms}
+              onChange={e => setBedrooms(e.target.value)}
+              placeholder="Nhập vào số phòng ngủ"
             />
           </div>
           <div className='search-pane'>

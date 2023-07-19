@@ -25,9 +25,9 @@ function App() {
     <div>
       <div className='header'>
         <div className='nav-pane'>
-          <button className='redirect_button' onClick={() => handleTabClick('Summary')}>Summary</button>
-          <button className='redirect_button' onClick={() => handleTabClick('News')}>News</button>
-          <button className='redirect_button' onClick={() => handleTabClick('Project')}>Project</button>
+          <button className='redirect_button' onClick={() => handleTabClick('Summary')}>Tổng quan</button>
+          <button className='redirect_button' onClick={() => handleTabClick('News')}>Tìm kiếm</button>
+          <button className='redirect_button' onClick={() => handleTabClick('Project')}>Định giá</button>
         </div>
       </div>
       <div className='main-content'>
